@@ -1,4 +1,4 @@
-package com.example.haircut;
+package com.barbie.haircut.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

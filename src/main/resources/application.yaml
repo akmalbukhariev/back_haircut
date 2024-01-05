@@ -1,0 +1,46 @@
+### DB setting ###
+spring:
+  datasource:
+    hikari:
+      main:
+        jdbc-url: ENC(4kxkXat9pvQT/3jS9DpMZj8RJ0T2MWtOLJwWtydc37NKz7SShNT1NiYYLXSeX6XajwgJdcOM7igmYz4GukavG630AM/mlm0O)
+        username: ENC(24zR0sSayYDmk9D6iTQIU2nv9Ax1CnUr)
+        password: ENC(H+n63fcsFDr2c3934q+ZaurKf3jmVdaC)
+        driver-class-name: org.mariadb.jdbc.Driver
+        connection-test-query: SELECT 1
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  
+  config:
+    activate:
+      on-profile: local
+  ### Spring Data JPA ###
+  #spring.jpa.hibernate.ddl-auto=update
+  #spring.jpa.properties.hibernate.format_sql=true
+  #spring.jpa.show-sql=true
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+
+#logging:
+  #config: classpath:log4j2.xml
+
+### mybatis setting ###
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  config-location: classpath:/config/mapper-config.xml
+
+jwt:
+  secret: ZbsAL3MYe1Z3cf3WZ9z17ygqUprKDyK6qoN3QZJahQNwbQy9AdZvkNZjDiMe2KF1FPuWLPguqm4rsgJu
+
+server:
+  port: 13515
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: 2b8eb8c4908f7f7c7b7432c23b6709609995507dbf8a61b18cea6b25545c7de2
+
+aes:
+  key: ENC(dfSIMAu+/xXUaemmfRfs/U7CIDO88OItR0mr0xffNrTpcIei2Q0NK7Ra3iOuPnet)
