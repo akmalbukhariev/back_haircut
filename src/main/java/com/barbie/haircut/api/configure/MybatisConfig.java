@@ -17,24 +17,24 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
-@Configuration
-@MapperScan(basePackages = "com.barbie.haircut.api.**.impl", sqlSessionFactoryRef = "SqlSessionFactory", sqlSessionTemplateRef = "SessionTemplate")
-@Slf4j
-public class MybatisConfig {
-    @Value("${mybatis.mapper-locations:defaultValue}")
-    String mapperLocation;
+//@Configuration
+//@MapperScan(basePackages = "com.barbie.haircut.api.**.impl", sqlSessionFactoryRef = "SqlSessionFactory", sqlSessionTemplateRef = "SessionTemplate")
+//@Slf4j
+//public class MybatisConfig {
+    //@Value("${mybatis.mapper-locations:defaultValue}")
+    //String mapperLocation = "classpath:/mapper/**/*.xml";
 
-    @Value("${mybatis.config-location:defaultValue}")
-    String mapperConfig;
+    //@Value("${mybatis.config-location:defaultValue}")
+    //String mapperConfig = "classpath:/config/mapper-config.xml";
 
-    @Primary
+    /*@Primary
     @Bean(name = "dataSource")
     @ConfigurationProperties(prefix = "spring.datasource.hikari.main")
     public DataSource DataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
-    }
+    }*/
 
-    @Primary
+    /*@Primary
     @Bean(name = "SqlSessionFactory")
     public SqlSessionFactory SqlSessionFactory(@Qualifier("dataSource") DataSource DataSource, ApplicationContext applicationContext) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
@@ -50,4 +50,4 @@ public class MybatisConfig {
     public SqlSessionTemplate SessionTemplate(@Qualifier("SqlSessionFactory") SqlSessionFactory firstSqlSessionFactory) {
         return new SqlSessionTemplate(firstSqlSessionFactory);
     }
-}
+}*/

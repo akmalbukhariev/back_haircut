@@ -1,20 +1,15 @@
 ### DB setting ###
 spring:
   datasource:
-    hikari:
-      main:
-        jdbc-url: ENC(4kxkXat9pvQT/3jS9DpMZj8RJ0T2MWtOLJwWtydc37NKz7SShNT1NiYYLXSeX6XajwgJdcOM7igmYz4GukavG630AM/mlm0O)
-        username: ENC(24zR0sSayYDmk9D6iTQIU2nv9Ax1CnUr)
-        password: ENC(H+n63fcsFDr2c3934q+ZaurKf3jmVdaC)
-        driver-class-name: org.mariadb.jdbc.Driver
-        connection-test-query: SELECT 1
+    url: jdbc:mariadb://localhost:3306/haircut
+    username: root
+    password: root
+
+  profiles:
+    active: default
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
-  
-  config:
-    activate:
-      on-profile: local
   ### Spring Data JPA ###
   #spring.jpa.hibernate.ddl-auto=update
   #spring.jpa.properties.hibernate.format_sql=true
@@ -35,7 +30,7 @@ jwt:
   secret: ZbsAL3MYe1Z3cf3WZ9z17ygqUprKDyK6qoN3QZJahQNwbQy9AdZvkNZjDiMe2KF1FPuWLPguqm4rsgJu
 
 server:
-  port: 13515
+  port: 8080
 
 jasypt:
   encryptor:

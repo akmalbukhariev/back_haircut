@@ -12,7 +12,8 @@ public enum Result {
     LOGIN_INVALID_TOKEN(250, "Token information cannot be verified."),
 
     AUTHENTICATION_ERROR(300, "Your authentication information cannot be verified."),
-    SERVER_ERROR(301, "A system error has occurred. Please contact your administrator.");
+    SERVER_ERROR(301, "A system error has occurred. Please contact your administrator."),
+    TOKEN_EMPTY(360, "Empty token" );
 
     private int code;
     private String message;

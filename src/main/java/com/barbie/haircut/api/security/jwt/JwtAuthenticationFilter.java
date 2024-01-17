@@ -27,11 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // TODO Auto-generated method stub
         String path = request.getServletPath();
 
         log.debug("############## "+path+" ###############");
-        if (!path.equals("/api/v1/user/comm/login") && !path.equals("/api/v1/admin/login")) {
+        if (!path.equals("/haircut/api/v1/user/login") && !path.equals("/haircut/api/v1/admin/login")) {
             // 1. Extracting JWT token from Request Header
             String token = resolveToken(request);
 
@@ -72,7 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-
     }
 
     private String resolveToken(HttpServletRequest request) {

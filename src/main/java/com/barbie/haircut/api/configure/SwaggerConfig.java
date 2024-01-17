@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Set;
 
 @Configuration
-//@EnableSwagger2
+@EnableSwagger2
 public class SwaggerConfig {
 
-    private static final String API_NAME = "HAIRCUT API";
+    private static final String API_NAME = "SIX-T PASSBLOCK API";
     private static final String API_VERSION = "v1";
-    private static final String API_DESCRIPTION = "This is for hairdresser and ordinary people";
+    private static final String API_DESCRIPTION = "SIX-T PASSBLOCK API";
 
     @Bean
     public Docket apiV1(){
@@ -42,7 +42,7 @@ public class SwaggerConfig {
                 .produces(getProduceContentTypes())
                 .groupName(API_VERSION)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.haircut"))
+                .apis(RequestHandlerSelectors.basePackage("com.barbie.haircut.api"))
                 //.paths(PathSelectors.ant("/passblock/api/v1/**"))
                 .paths(PathSelectors.any())
                 .build()
