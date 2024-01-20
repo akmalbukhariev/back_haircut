@@ -56,7 +56,6 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
             try {
                 new ObjectMapper().writeValue(response.getOutputStream(), resResult);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 //ExceptionUtils.getMessage(e1);
             }
         }

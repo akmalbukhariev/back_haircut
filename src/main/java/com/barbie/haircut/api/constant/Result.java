@@ -3,7 +3,7 @@ package com.barbie.haircut.api.constant;
 public enum Result {
     SUCCESS(100, "Success."),
 
-
+    USER_EXIST(140,"User exist"),
     TOKEN_INVALID(200, "Invalid token information."),
     TOKEN_EXPIRED_TIME(201, "This token is expired."),
     TOKEN_UNSUPPORTED_JWT(202, "Unsupported token information."),
