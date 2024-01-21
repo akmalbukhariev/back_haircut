@@ -36,11 +36,23 @@ public class UserCommonController extends BaseController {
 
         try
         {
+            int resultNum = userService.login(userParam);
 
+            if(resultNum == Result.USER_NOT_EXIST.getCode()){
+                result = setResult(Result.USER_NOT_EXIST);
+            }
+            else if(resultNum == Result.USER_PASSWORD_NOT_MATCHED.getCode()){
+                result = setResult(Result.USER_PASSWORD_NOT_MATCHED);
+            }
+            else if(resultNum != 0) {
+                result = setResult(Result.SUCCESS);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
         }
         catch(Exception e)
         {
-
+            result = setResult(Result.SERVER_ERROR);
         }
 
         return new ResponseEntity<Object>(result, HttpStatus.OK);
@@ -52,7 +64,6 @@ public class UserCommonController extends BaseController {
     @PostMapping(value= "/register", headers = { "Content-type=application/json" })
     public ResponseEntity<Object> register(@RequestBody UserRegistrationParam param){
         VersionResponseResult result = null;
-
 
         try {
             int resultNum = userService.register(param);

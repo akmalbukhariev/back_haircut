@@ -7,6 +7,7 @@ import com.barbie.haircut.api.param.UserRegistrationParam;
 import com.barbie.haircut.api.user.service.IUserService;
 import com.barbie.haircut.api.user.service.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,17 @@ public class UserService implements IUserService {
 
     @Override
     public int login(UserParam param) throws Exception {
-        return 0;
+
+        CamelCaseMap map = userMapper.getUser(param.getUserId());
+        if(map == null){
+            return Result.USER_NOT_EXIST.getCode();
+        }
+
+        String strPassword = map.get("password").toString();
+        if(!psssEncoder.matches(param.getPasswd(), strPassword)){
+            return Result.USER_PASSWORD_NOT_MATCHED.getCode();
+        }
+        return Result.SUCCESS.getCode();
     }
 
     @Override

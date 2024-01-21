@@ -4,6 +4,9 @@ public enum Result {
     SUCCESS(100, "Success."),
 
     USER_EXIST(140,"User exist"),
+    USER_NOT_EXIST(141, "User is not exist"),
+    USER_PASSWORD_NOT_MATCHED(142, "Password is not matched!"),
+
     TOKEN_INVALID(200, "Invalid token information."),
     TOKEN_EXPIRED_TIME(201, "This token is expired."),
     TOKEN_UNSUPPORTED_JWT(202, "Unsupported token information."),
