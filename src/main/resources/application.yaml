@@ -1,9 +1,9 @@
 ### DB setting ###
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/haircut
+    url: jdbc:mariadb://176.221.28.239:3306/haircut
     username: root
-    password: root
+    password: barbersfbs899094!
 
   profiles:
     active: default
