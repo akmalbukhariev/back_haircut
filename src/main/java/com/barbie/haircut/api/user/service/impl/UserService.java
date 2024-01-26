@@ -26,10 +26,11 @@ public class UserService implements IUserService {
             return Result.USER_NOT_EXIST.getCode();
         }
 
+        /*Login with password
         String strPassword = map.get("password").toString();
         if(!psssEncoder.matches(param.getPasswd(), strPassword)){
             return Result.USER_PASSWORD_NOT_MATCHED.getCode();
-        }
+        }*/
         return Result.SUCCESS.getCode();
     }
 
