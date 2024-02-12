@@ -1,5 +1,8 @@
 package com.barbie.haircut.api.constant;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Constant {
 
     public static final String api_version				= "1.0.0";
@@ -11,4 +14,5 @@ public class Constant {
     public static final String HEADER_REFRESH_TOKEN 	= "refresh-token";
     public static final String HEADER_ROLE 				= "auth-role";
     public static final String HEADER_USER_NAME	 		= "user-name";
+    public  static final Path UPLOAD_DIRECTORY =    Paths.get("images/");
 }

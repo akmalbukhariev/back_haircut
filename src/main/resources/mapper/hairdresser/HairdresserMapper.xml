@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.barbie.haircut.api.hairdresser.service.HairdresserMapper">
+
+<!--Select by ID-->
+    <select id="selectHairdresserbyNo" resultType="camelMap">
+        <![CDATA[
+            SELECT *
+            FROM hairdresser_info where no = #{no}
+        ]]>
+    </select>
+<!--GET All-->
+    <select id="selectHairdresserAll" resultType="camelMap">
+        <![CDATA[
+            Select * From hairdresser_info
+        ]]>
+    </select>
+<!--CREATE -->
+    <insert id="insertNewHairdresser">
+        <![CDATA[
+           INSERT INTO hairdresser_info
+            (
+               name
+               ,surname
+               ,phone
+               ,address
+               ,workingHour
+               ,uploadImage
+               ,storeImage
+               ,document
+               ,awards
+            )
+            VALUES
+            (
+                 #{name}
+                ,#{surname}
+                ,#{phone}
+                ,#{address}
+                ,#{workingHour}
+                ,#{uploadImage}
+                ,#{storeImage}
+                ,#{document}
+                ,#{awards}
+            )
+        ]]>
+    </insert>
+<!--DELETE By ID-->
+    <delete id="deleteHairdresserbyNo">
+        <![CDATA[
+            DELETE FROM hairdresser_info Where no = #{no}
+        ]]>
+    </delete>
+<!--UPDATE by ID-->
+    <update id="updateHairdresserbyNo">
+        <![CDATA[
+            UPDATE hairdresser_info
+            SET
+                name           =#{name},
+                surname        =#{surname},
+                phone          =#{phone},
+                address        =#{address},
+                workingHour    =#{workingHour},
+                uploadImage    =#{uploadImage},
+                storeImage     =#{storeImage},
+                document       =#{document},
+                awards         =#{awards}
+            WHERE
+                no = #{no}
+        ]]>
+    </update>
+</mapper>

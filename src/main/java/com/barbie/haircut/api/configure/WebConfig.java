@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -34,5 +35,12 @@ public class WebConfig implements WebMvcConfigurer {
         // If there is no message, the code uses the default message instead of raising an exception..
         source.setUseCodeAsDefaultMessage(true);
         return source;
+    }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(10 * 1024 * 1024); // Max file size: 10MB
+        return resolver;
     }
 }

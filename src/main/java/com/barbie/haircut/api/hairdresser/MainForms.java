@@ -1,4 +1,4 @@
-package com.barbie.haircut.api.hairdresser.controller;
+package com.barbie.haircut.api.hairdresser;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
