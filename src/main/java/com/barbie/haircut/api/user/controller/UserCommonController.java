@@ -1,12 +1,17 @@
 package com.barbie.haircut.api.user.controller;
 
 import com.barbie.haircut.api.BaseController;
+import com.barbie.haircut.api.CamelCaseMap;
 import com.barbie.haircut.api.VersionResponseResult;
 import com.barbie.haircut.api.constant.Result;
+import com.barbie.haircut.api.dto.UserInfoDto;
+import com.barbie.haircut.api.param.UserInfoParam;
 import com.barbie.haircut.api.param.UserParam;
 import com.barbie.haircut.api.param.UserRegistrationParam;
 import com.barbie.haircut.api.user.service.IUserService;
-import com.fasterxml.jackson.databind.ser.Serializers;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,8 +19,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.service.ResponseMessage;
+
+import java.io.File;
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin("*")
@@ -69,6 +78,84 @@ public class UserCommonController extends BaseController {
             int resultNum = userService.register(param);
             if(resultNum == Result.USER_EXIST.getCode()){
                 result = setResult(Result.USER_EXIST);
+            }
+            else if(resultNum != 0) {
+                result = setResult(Result.SUCCESS);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "3. get user", description = "get user info", hidden = false,
+            responses = {@ApiResponse(responseCode = "200", description = "success")
+    })
+    @GetMapping(value= "/getUser/{phone}", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> getUser(@PathVariable String phone){
+        VersionResponseResult result = null;
+
+        try {
+            CamelCaseMap map = userService.getUser(phone);
+            if(map == null){
+                result = setResult(Result.USER_NOT_EXIST);
+            }
+            else{
+                UserInfoDto info = new UserInfoDto();
+                info.setPhone(map.get("phone").toString());
+                info.setIs_customer(map.get("isCustomer").toString());
+                info.setIs_hairdresser(map.get("isHairdresser").toString());
+
+                result = setResult(Result.USER_EXIST, info);
+            }
+        } catch (Exception e) {
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "4. update user", description = "get user is_customer", hidden = false,
+            responses = {@ApiResponse(responseCode = "200", description = "success")
+            })
+    @PutMapping(value= "/updateUserCustomer", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> updateUserCustomer(@RequestBody UserInfoParam param){
+        VersionResponseResult result = null;
+
+        try {
+            int resultNum = userService.updateUserCustomer(param);
+            if(resultNum == 0){
+                result = setResult(Result.FAILED);
+            }
+            else if(resultNum != 0) {
+                result = setResult(Result.SUCCESS);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "5. update user", description = "get user is_hairdresser", hidden = false,
+            responses = {@ApiResponse(responseCode = "200", description = "success")
+            })
+    @PutMapping(value= "/updateUserHairdreser", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> updateUserHairdresser(@RequestBody UserInfoParam param){
+        VersionResponseResult result = null;
+
+        try {
+            int resultNum = userService.updateUserHairdresser(param);
+            if(resultNum == 0){
+                result = setResult(Result.FAILED);
             }
             else if(resultNum != 0) {
                 result = setResult(Result.SUCCESS);

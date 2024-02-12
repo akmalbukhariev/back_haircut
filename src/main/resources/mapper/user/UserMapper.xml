@@ -9,6 +9,24 @@
         ]]>
     </select>
 
+    <update id = "updateUserCustomer">
+        <![CDATA[
+			UPDATE user_info a
+			SET
+				a.is_customer = #{is_customer}
+			WHERE a.phone = #{phone}
+		]]>
+    </update>
+
+    <update id = "updateUserHairdresser">
+        <![CDATA[
+			UPDATE user_info a
+			SET
+				a.is_hairdresser = #{is_hairdresser}
+			WHERE a.phone = #{phone}
+		]]>
+    </update>
+
     <insert id="registerUser">
         <![CDATA[
            INSERT INTO user_info
@@ -29,4 +47,5 @@
             )
         ]]>
     </insert>
+
 </mapper>
