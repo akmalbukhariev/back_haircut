@@ -2,6 +2,7 @@ package com.barbie.haircut.api.constant;
 
 public enum Result {
     SUCCESS(100, "Success."),
+    FAILED(101, "Failed."),
 
     USER_EXIST(140,"User exist"),
     USER_NOT_EXIST(141, "User is not exist"),

@@ -35,7 +35,11 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'mysql:mysql-connector-java:8.0.23'
 	implementation 'org.springframework.boot:spring-boot-devtools'
+
 	implementation 'commons-fileupload:commons-fileupload:1.4'
+ 
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
+ 
 	//implementation group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '3.2.0'
 
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
