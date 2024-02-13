@@ -36,4 +36,11 @@ public class WebConfig implements WebMvcConfigurer {
         source.setUseCodeAsDefaultMessage(true);
         return source;
     }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(10 * 1024 * 1024); // Max file size: 10MB
+        return resolver;
+    }
 }

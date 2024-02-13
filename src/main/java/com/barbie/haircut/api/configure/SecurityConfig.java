@@ -119,6 +119,7 @@ public class SecurityConfig {
                 "/v3/api-docs/**",
                 "/haircut/api/v1//admin/**",
                 "/haircut/api/v1/user/**",
+                "/haircut/api/v1/hairdresser/**",
                 "/error");
     }
 

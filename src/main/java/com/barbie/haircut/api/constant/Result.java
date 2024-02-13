@@ -13,7 +13,7 @@ public enum Result {
     TOKEN_UNSUPPORTED_JWT(202, "Unsupported token information."),
 
 
-    LOGIN_INVALID_TOKEN(250, "Token information cannot be verified."),
+    LOGIN_INVALID_TOKEN( 250, "Token information cannot be verified."),
 
     AUTHENTICATION_ERROR(300, "Your authentication information cannot be verified."),
     SERVER_ERROR(301, "A system error has occurred. Please contact your administrator."),
