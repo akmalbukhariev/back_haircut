@@ -7,6 +7,8 @@ import com.barbie.haircut.api.hairdresser.service.IServiceHairdresser;
 import com.barbie.haircut.api.hairdresser.service.IServiceImage;
 import com.barbie.haircut.api.param.HairdresserParam;
 import com.barbie.haircut.api.param.HairdresserResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.springframework.core.io.Resource;
@@ -28,6 +30,9 @@ public class HairdresserController extends BaseController {
     private  final IServiceHairdresser iServiceHairdresser;
     private final HairdresserDtoConverter hairdresserDtoConverter;
 
+    @Operation(tags = {"Hairdresser"}, summary = "1. create", description = "create a hairdresser", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -39,6 +44,9 @@ public class HairdresserController extends BaseController {
         else return  new ResponseEntity<Object>("Bad Request", HttpStatus.BAD_REQUEST);
     }
 
+    @Operation(tags = {"Hairdresser"}, summary = "2. get", description = "get a hairdresser info by id", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     @GetMapping({"Id"})
     public  ResponseEntity<Object> getHairdresserById(@RequestParam int Id) throws Exception {
 
@@ -47,6 +55,9 @@ public class HairdresserController extends BaseController {
         return new ResponseEntity(hairdresserResponse, HttpStatus.OK);
     }
 
+    @Operation(tags = {"Hairdresser"}, summary = "3. get", description = "get all hairdresser info", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     @GetMapping()
     public ResponseEntity<List<Object>> getHairdresserAll() throws Exception
     {
@@ -57,6 +68,9 @@ public class HairdresserController extends BaseController {
         return  new ResponseEntity<List<Object>>(Arrays.asList(hairdresserResponsesList.toArray()), HttpStatus.OK);
     }
 
+    @Operation(tags = {"Hairdresser"}, summary = "4. update", description = "update hairdresser", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public  ResponseEntity<Object> updateHairdresser( @RequestPart("hairdresserParam") HairdresserParam hairdresserParam,
                                                       @RequestParam int Id) throws Exception
@@ -68,6 +82,9 @@ public class HairdresserController extends BaseController {
        return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 
+    @Operation(tags = {"Hairdresser"}, summary = "5. delete", description = "delete hairdresser by id", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     @DeleteMapping({"Id"})
     public ResponseEntity<Object> deleteHairdresserById(@RequestParam int Id) throws Exception {
 

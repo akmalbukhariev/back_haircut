@@ -1,6 +1,7 @@
 package com.barbie.haircut.api.hairdresser.service;
 
 import com.barbie.haircut.api.constant.Constant;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +22,9 @@ import java.util.List;
 @Service
 public class IServiceImage {
     private static final  Path root = Constant.UPLOAD_DIRECTORY;
+
+    @Value("${upload.dir}")
+    private String uploadDir;
 
     public Resource getFullPath(String fileName){
 
@@ -60,7 +66,17 @@ public class IServiceImage {
 
             Path targetLocation = root.resolve(strTimeName);
 
-            Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            Path directory = Paths.get(uploadDir);
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+ 
+            Path filepath = directory.resolve(strTimeName);
+            try (OutputStream os = Files.newOutputStream(filepath)) {
+                os.write(multipartFile.getBytes());
+            }
+
+            //Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return new UploadFile(fileName, strTimeName);
         } catch (IOException ex) {

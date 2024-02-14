@@ -18,6 +18,9 @@ spring:
     basename: i18n/exception
     encoding: UTF-8
 
+upload:
+  dir: /Users/akmalbukhariev/Projects/JavaProjects/back_haircut/images
+
 #logging:
   #config: classpath:log4j2.xml
 
