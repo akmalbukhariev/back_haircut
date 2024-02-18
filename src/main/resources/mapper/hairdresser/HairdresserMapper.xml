@@ -68,4 +68,45 @@
                 no = #{no}
         ]]>
     </update>
+
+    <select id="selectAllHairdresserForUserMainPage" resultType="camelMap">
+    <![CDATA[
+            select
+                  t1.no, t1.name, t1.surname, t1.phone, t1.address, t1.storeImage, t1.profession,
+                  GROUP_CONCAT(t2.services) AS services,
+                  (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) / 5 AS average_score
+            from
+                hairdresser_info t1
+            inner join
+                services t2 on t1.no = t2.hairdresser_no
+            inner join
+                scores t3 on t1.no = t3.hairdresser_no
+            group by
+                t1.phone
+        ]]>
+    </select>
+
+    <select id="selectHairdresserDetailInfo" resultType="camelMap">
+        <![CDATA[
+            select * from
+            (
+                select
+                      t1.no, t1.name, t1.surname, t1.phone, t1.workingHour, t1.address, t1.storeImage, t1.profession,
+                      GROUP_CONCAT(t2.services) AS services,
+                      GROUP_CONCAT(t2.price) as price,
+                      GROUP_CONCAT(t2.color) as service_color,
+                      CONCAT_WS(',', t3.score1, t3.score2, t3.score3, t3.score4, t3.score5) AS scores,
+                      (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) / 5 AS average_score
+                from
+                    hairdresser_info t1
+                inner join
+                   services t2 on t1.no = t2.hairdresser_no
+                inner join
+                   scores t3 on t1.no = t3.hairdresser_no
+                group by
+                    t1.phone
+                    ) myTable
+                where myTable.phone = #{phone}
+        ]]>
+    </select>
 </mapper>

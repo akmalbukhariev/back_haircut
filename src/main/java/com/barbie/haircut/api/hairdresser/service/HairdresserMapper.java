@@ -13,4 +13,6 @@ public interface HairdresserMapper {
     public int insertNewHairdresser(HairdresserDto hairdresserDto) throws  Exception;
     public  int deleteHairdresserbyNo(int no) throws  Exception;
     public  int updateHairdresserbyNo(HairdresserDto hairdresserDto) throws Exception;
+    public List<CamelCaseMap> selectAllHairdresserForUserMainPage() throws  Exception;
+    public List<CamelCaseMap> selectHairdresserDetailInfo(String phone) throws  Exception;
 }

@@ -19,9 +19,9 @@ spring:
     encoding: UTF-8
 
 upload:
-  dir: /Users/akmalbukhariev/Projects/JavaProjects/back_haircut/images
+    dir: /Users/akmalbukhariev/Projects/JavaProjects/back_haircut/images
 
-#logging:
+  #logging:
   #config: classpath:log4j2.xml
 
 ### mybatis setting ###

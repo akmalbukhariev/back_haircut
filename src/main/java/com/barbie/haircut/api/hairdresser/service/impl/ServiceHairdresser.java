@@ -3,6 +3,7 @@ package com.barbie.haircut.api.hairdresser.service.impl;
 import com.barbie.haircut.api.CamelCaseMap;
 import com.barbie.haircut.api.convert.HairdresserDtoConverter;
 import com.barbie.haircut.api.dto.HairdresserDto;
+import com.barbie.haircut.api.dto.HairdresserInfoDto;
 import com.barbie.haircut.api.hairdresser.service.HairdresserMapper;
 import com.barbie.haircut.api.hairdresser.service.IServiceHairdresser;
 import com.barbie.haircut.api.hairdresser.service.IServiceImage;
@@ -90,6 +91,55 @@ public class ServiceHairdresser implements IServiceHairdresser {
         }
 
         return  hairdresserResponsesList;
+    }
+
+    @Override
+    public List<HairdresserInfoDto> getAllHairdresserForUserMainPage() throws Exception {
+
+        List<CamelCaseMap> dataList = hairdresserMapper.selectAllHairdresserForUserMainPage();
+        List<HairdresserInfoDto> resultData = new ArrayList<>();
+        for(CamelCaseMap map: dataList)
+        {
+            HairdresserInfoDto newItem = new HairdresserInfoDto();
+            newItem.setName(map.get("name").toString());
+            newItem.setSurname(map.get("surname").toString());
+            newItem.setPhone(map.get("phone").toString());
+            newItem.setAddress(map.get("address").toString());
+            newItem.setImageUri(map.get("storeimage").toString());
+            newItem.setProfession(map.get("profession").toString());
+            newItem.setServices(map.get("services").toString());
+            newItem.setAverageScore(map.get("averageScore").toString());
+
+            resultData.add(newItem);
+        }
+
+        return resultData;
+    }
+
+    @Override
+    public List<HairdresserInfoDto> getHairdresserDetailInfo(String phone) throws Exception {
+
+        List<CamelCaseMap> dataList = hairdresserMapper.selectHairdresserDetailInfo(phone);
+        List<HairdresserInfoDto> resultData = new ArrayList<>();
+        for(CamelCaseMap map: dataList)
+        {
+            HairdresserInfoDto newItem = new HairdresserInfoDto();
+            newItem.setName(map.get("name").toString());
+            newItem.setSurname(map.get("surname").toString());
+            newItem.setPhone(map.get("phone").toString());
+            newItem.setWorkingHour(map.get("workinghour").toString());
+            newItem.setAddress(map.get("address").toString());
+            newItem.setImageUri(map.get("storeimage").toString());
+            newItem.setProfession(map.get("profession").toString());
+            newItem.setServices(map.get("services").toString());
+            newItem.setServiceColor(map.get("serviceColor").toString());
+            newItem.setScores(map.get("scores").toString());
+            newItem.setAverageScore(map.get("averageScore").toString());
+
+            resultData.add(newItem);
+        }
+
+        return resultData;
     }
 
     @Override

@@ -50,6 +50,7 @@ public class SecurityConfig {
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            "/haircut/images/**",
             //"/passblock/api/v1/user/login",
             //일단 시큐리티 무시하고 전부허용
             // "/passblock/api/v1/admin/**",
@@ -78,13 +79,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"
                 ,"http://localhost:8080"
-                ,"http://localhost"
-                ,"http://work.passblock.co.kr:3001/"
-                ,"http://sixt.passblock.co.kr:3001/"
-                ,"http://work.passblock.co.kr"
-                ,"http://211.37.149.112:3001"
-                ,"http://192.168.0.21:3000"
-                ,"http://192.168.0.12:3000"));
+                ,"http://localhost"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(Arrays.asList("Authorization", "access-token", "refresh-token","enckey"));
@@ -119,6 +114,8 @@ public class SecurityConfig {
                 "/v3/api-docs/**",
                 "/haircut/api/v1//admin/**",
                 "/haircut/api/v1/user/**",
+                //"http://localhost:8080/images/",
+                "/haircut/images/**",
                 "/haircut/api/v1/hairdresser/**",
                 "/error");
     }

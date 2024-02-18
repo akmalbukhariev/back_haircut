@@ -1,16 +1,17 @@
-package com.barbie.haircut.api.param;
+package com.barbie.haircut.api.dto;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+
 @Data
-public class HairdresserResponse {
+public class HairdresserInfoDto {
     private String name;
     private String surname;
     private String phone;
     private String address;
     private String workingHour;
-    private String score;
+    private String scores;
     private String services;
+    private String serviceColor;
     private String imageUri;
     private String imageName;
     private String document;
