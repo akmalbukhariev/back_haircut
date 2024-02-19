@@ -1,7 +1,10 @@
 package com.barbie.haircut.api;
 
+import org.springframework.stereotype.Service;
+
 import java.io.Serializable;
 
+@Service
 public class ResponseResult implements Serializable {
     private String resultCode;
     private String resultMsg;

@@ -29,6 +29,9 @@
                ,storeImage
                ,document
                ,awards
+               ,profession
+               ,deleted
+               ,blocked
             )
             VALUES
             (
@@ -41,6 +44,9 @@
                 ,#{storeImage}
                 ,#{document}
                 ,#{awards}
+                ,#{profession}
+                ,#{deleted}
+                ,#{blocked}
             )
         ]]>
     </insert>
@@ -63,7 +69,10 @@
                 uploadImage    =#{uploadImage},
                 storeImage     =#{storeImage},
                 document       =#{document},
-                awards         =#{awards}
+                awards         =#{awards},
+                profession     =#{profession},
+                deleted        =#{deleted},
+                blocked        =#{blocked}
             WHERE
                 no = #{no}
         ]]>

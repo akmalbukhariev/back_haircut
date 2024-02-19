@@ -1,6 +1,7 @@
 package com.barbie.haircut.api.dto;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 @Data
 public class HairdresserDto {
@@ -14,4 +15,7 @@ public class HairdresserDto {
    private String storeImage;
    private String document;
    private String awards;
+   private String profession;
+   private int deleted;
+   private int blocked;
 }

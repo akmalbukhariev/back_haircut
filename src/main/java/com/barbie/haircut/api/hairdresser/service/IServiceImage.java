@@ -21,30 +21,21 @@ import java.util.List;
 
 @Service
 public class IServiceImage {
-    private static final  Path root = Constant.UPLOAD_DIRECTORY;
 
     @Value("${upload.dir}")
     private String uploadDir;
 
-    public Resource getFullPath(String fileName){
+    public Path getFullPath(String imageFilePath){
 
-        Path  file = root.resolve(fileName);
+        Path  file = Paths.get(imageFilePath);
 
-        if(!Files.exists(file)) return null;
-
-        Resource resource = null;
-        try {
-            resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable())
+            if(Files.exists(file))
             {
-                return resource;
+                return file;
             }
             else {
-                throw new RuntimeException("Could not read the files");
+                return null;
             }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error" + e.getMessage());
-        }
     }
 
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException{
@@ -56,29 +47,26 @@ public class IServiceImage {
         try {
             // Check if the file's name contains invalid characters
             if(fileName.contains("..")) {
-                //throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+                return  null;
             }
 
-            // Copy file to the target location (Replacing existing file with the same name)
             Date date = new Date();
             String strTimeName  = String.valueOf(date.getTime()) +
                     "." + extractExt(multipartFile.getOriginalFilename());
 
-            Path targetLocation = root.resolve(strTimeName);
+
 
             Path directory = Paths.get(uploadDir);
             if (!Files.exists(directory)) {
                 Files.createDirectories(directory);
             }
- 
-            Path filepath = directory.resolve(strTimeName);
-            try (OutputStream os = Files.newOutputStream(filepath)) {
+
+            Path targetFileLocation = directory.resolve(strTimeName);
+            try (OutputStream os = Files.newOutputStream(targetFileLocation)) {
                 os.write(multipartFile.getBytes());
             }
 
-            //Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            return new UploadFile(fileName, strTimeName);
+            return new UploadFile(fileName, targetFileLocation.toString());
         } catch (IOException ex) {
             throw new IOException(ex); //FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
@@ -103,9 +91,9 @@ public class IServiceImage {
         return originalFileName.substring(pos + 1);
     }
 
-    public void deletestoreFile(String storeFilename)
+    public void deletestoreFile(String storeImageFilePath)
     {
-        Path file = root.resolve(storeFilename);
+        Path file = Path.of(storeImageFilePath);
         try {
             if(Files.exists(file)) {
                 Files.deleteIfExists(file);

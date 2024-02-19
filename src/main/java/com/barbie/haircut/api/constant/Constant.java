@@ -14,5 +14,5 @@ public class Constant {
     public static final String HEADER_REFRESH_TOKEN 	= "refresh-token";
     public static final String HEADER_ROLE 				= "auth-role";
     public static final String HEADER_USER_NAME	 		= "user-name";
-    public  static final Path UPLOAD_DIRECTORY =    Paths.get("images/");
+
 }
