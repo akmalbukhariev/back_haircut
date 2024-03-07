@@ -4,7 +4,10 @@ import com.barbie.haircut.api.BaseController;
 import com.barbie.haircut.api.CamelCaseMap;
 import com.barbie.haircut.api.VersionResponseResult;
 import com.barbie.haircut.api.constant.Result;
+import com.barbie.haircut.api.dto.FavoriteHairdresserDto;
+import com.barbie.haircut.api.dto.UserBookedInfoDto;
 import com.barbie.haircut.api.dto.UserInfoDto;
+import com.barbie.haircut.api.param.FavoriteHairdresserParam;
 import com.barbie.haircut.api.param.UserInfoParam;
 import com.barbie.haircut.api.param.UserParam;
 import com.barbie.haircut.api.param.UserRegistrationParam;
@@ -20,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @CrossOrigin("*")
@@ -102,6 +107,11 @@ public class UserCommonController extends BaseController {
             else{
                 UserInfoDto info = new UserInfoDto();
                 info.setPhone(map.get("phone").toString());
+                info.setName(map.get("name").toString());
+                info.setSurname(map.get("surname").toString());
+                info.setLocation(map.get("location").toString());
+                info.setLanguage(map.get("language").toString());
+                info.setNotification(map.get("notification").toString());
                 info.setIs_customer(map.get("isCustomer").toString());
                 info.setIs_hairdresser(map.get("isHairdresser").toString());
 
@@ -149,6 +159,98 @@ public class UserCommonController extends BaseController {
 
         try {
             int resultNum = userService.updateUserHairdresser(param);
+            if(resultNum == 0){
+                result = setResult(Result.FAILED);
+            }
+            else if(resultNum != 0) {
+                result = setResult(Result.SUCCESS);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "6. get user booked history", description = "user info", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @GetMapping(value= "/getUserBookedList/{phone}", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> getUserBookedList(@PathVariable String phone) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            List<UserBookedInfoDto> resultData = userService.getUserBookedList(phone);
+
+            if(resultData.size() != 0 && !resultData.isEmpty()) {
+                result = setResult(Result.SUCCESS , resultData );
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+
+        } catch(Exception e){
+            log.error(e.getMessage());
+            result = setResult(Result.SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "7. add favorite hairdresser", description = "add favorite hairdresser", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @PostMapping(value= "/addFavoriteHairdresser", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> addFavoriteHairdresser(@RequestBody FavoriteHairdresserParam param){
+        VersionResponseResult result = null;
+
+        try {
+            int resultNum = userService.addFavoriteHairdresser(param);
+            if(resultNum != 0) {
+                result = setResult(Result.SUCCESS);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "8. get all favorite hairdresser", description = "get all favorite hairdresser", hidden = false,
+            responses = {@ApiResponse(responseCode = "200", description = "success")
+            })
+    @GetMapping(value= "/getAllFavoriteHairdresser/{phone}", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> getAllFavoriteHairdresser(@PathVariable String phone){
+        VersionResponseResult result = null;
+        try {
+            List<FavoriteHairdresserDto> resultData = userService.getAllFavoriteHairdresser(phone);
+
+            if(resultData.size() != 0 && !resultData.isEmpty()) {
+                result = setResult(Result.SUCCESS , resultData );
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+
+        } catch(Exception e){
+            log.error(e.getMessage());
+            result = setResult(Result.SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"User"}, summary = "9. update user info", description = "update usr info", hidden = false,
+            responses = {@ApiResponse(responseCode = "200", description = "success")
+            })
+    @PutMapping(value= "/updateUserInfo", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> updateUserInfo(@RequestBody UserInfoParam param){
+        VersionResponseResult result = null;
+
+        try {
+            int resultNum = userService.updateUserInfo(param);
             if(resultNum == 0){
                 result = setResult(Result.FAILED);
             }

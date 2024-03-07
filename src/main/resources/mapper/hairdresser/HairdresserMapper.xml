@@ -2,79 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.barbie.haircut.api.hairdresser.service.HairdresserMapper">
 
-<!--Select by ID-->
-    <select id="selectHairdresserbyNo" resultType="camelMap">
+    <select id="selectHairdresser" resultType="camelMap">
         <![CDATA[
             SELECT *
-            FROM hairdresser_info where no = #{no}
+            FROM hairdresser_info where phone = #{phone}
         ]]>
     </select>
-<!--GET All-->
-    <select id="selectHairdresserAll" resultType="camelMap">
-        <![CDATA[
-            Select * From hairdresser_info
-        ]]>
-    </select>
-<!--CREATE -->
-    <insert id="insertNewHairdresser">
-        <![CDATA[
-           INSERT INTO hairdresser_info
-            (
-               name
-               ,surname
-               ,phone
-               ,address
-               ,workingHour
-               ,uploadImage
-               ,storeImage
-               ,document
-               ,awards
-            )
-            VALUES
-            (
-                 #{name}
-                ,#{surname}
-                ,#{phone}
-                ,#{address}
-                ,#{workingHour}
-                ,#{uploadImage}
-                ,#{storeImage}
-                ,#{document}
-                ,#{awards}
-            )
-        ]]>
-    </insert>
-<!--DELETE By ID-->
-    <delete id="deleteHairdresserbyNo">
-        <![CDATA[
-            DELETE FROM hairdresser_info Where no = #{no}
-        ]]>
-    </delete>
-<!--UPDATE by ID-->
-    <update id="updateHairdresserbyNo">
-        <![CDATA[
-            UPDATE hairdresser_info
-            SET
-                name           =#{name},
-                surname        =#{surname},
-                phone          =#{phone},
-                address        =#{address},
-                workingHour    =#{workingHour},
-                uploadImage    =#{uploadImage},
-                storeImage     =#{storeImage},
-                document       =#{document},
-                awards         =#{awards}
-            WHERE
-                no = #{no}
-        ]]>
-    </update>
 
     <select id="selectAllHairdresserForUserMainPage" resultType="camelMap">
     <![CDATA[
             select
                   t1.no, t1.name, t1.surname, t1.phone, t1.address, t1.storeImage, t1.profession,
                   GROUP_CONCAT(t2.services) AS services,
-                  (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) / 5 AS average_score
+                  (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) AS all_scores
             from
                 hairdresser_info t1
             inner join
@@ -88,25 +28,43 @@
 
     <select id="selectHairdresserDetailInfo" resultType="camelMap">
         <![CDATA[
-            select * from
-            (
-                select
-                      t1.no, t1.name, t1.surname, t1.phone, t1.workingHour, t1.address, t1.storeImage, t1.profession,
-                      GROUP_CONCAT(t2.services) AS services,
-                      GROUP_CONCAT(t2.price) as price,
-                      GROUP_CONCAT(t2.color) as service_color,
-                      CONCAT_WS(',', t3.score1, t3.score2, t3.score3, t3.score4, t3.score5) AS scores,
-                      (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) / 5 AS average_score
-                from
-                    hairdresser_info t1
-                inner join
-                   services t2 on t1.no = t2.hairdresser_no
-                inner join
-                   scores t3 on t1.no = t3.hairdresser_no
-                group by
-                    t1.phone
-                    ) myTable
-                where myTable.phone = #{phone}
+            select
+                t1.no, t1.name, t1.surname, t1.phone, t1.workingHour, t1.address, t1.storeImage, t1.profession,
+                JSON_ARRAYAGG(JSON_OBJECT('no',t2.no, 'name', t2.services, 'price', t2.price, 'color', t2.color)) AS services,
+                CONCAT_WS(',', t3.score1, t3.score2, t3.score3, t3.score4, t3.score5) AS scores,
+                (t3.score1 + t3.score2 + t3.score3 + t3.score4 + t3.score5) AS all_scores,
+                (t3.score1 + t3.score2 * 2 + t3.score3 * 3 + t3.score4 * 4 + t3.score5 * 5) / (t3.score1 + t3.score2 + t3.score3
+                + t3.score4 + t3.score5) AS average_scores
+            from
+               hairdresser_info t1
+            inner join
+               services t2 on t1.no = t2.hairdresser_no
+            inner join
+               scores t3 on t1.no = t3.hairdresser_no
+            where
+               t1.phone = #{phone}
+            group by
+                t1.phone
         ]]>
     </select>
+
+    <insert id="insertBookedClient">
+        <![CDATA[
+           INSERT INTO hairdresser_booked_clients (hairdresser_no, client_no, service, date)
+            select
+               t2.no,
+               t1.no,
+               #{services},
+               #{date}
+            from
+               user_info t1
+            inner join
+               hairdresser_info t2
+            where
+               t1.phone = #{userPhone}
+            and
+               t2.phone = #{hairdresserPhone}
+        ]]>
+    </insert>
+
 </mapper>

@@ -6,6 +6,7 @@ import lombok.Data;
 public class UserRegistrationParam {
     public String phone;
     public String name;
+    public String surName;
     public String password;
     public String location;
     public String is_customer;

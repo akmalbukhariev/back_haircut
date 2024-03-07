@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.barbie.haircut.api.user.service.UserMapper">
 
-    <select id="getUser" resultType="camelMap">
+    <select id="selectUser" resultType="camelMap">
         <![CDATA[
             SELECT *
             FROM user_info where phone = #{phone}
@@ -27,12 +27,13 @@
 		]]>
     </update>
 
-    <insert id="registerUser">
+    <insert id="insertUser">
         <![CDATA[
            INSERT INTO user_info
             (
                 phone
                 ,name
+                ,surname
                 ,password
                 ,is_customer
                 ,location
@@ -41,11 +42,78 @@
             (
                 #{phone}
                 ,#{name}
+                ,#{surName}
                 ,#{password}
                 ,#{is_customer}
                 ,#{location}
             )
         ]]>
     </insert>
+
+    <select id="selectUserBookedList" resultType="camelMap">
+        <![CDATA[
+                select
+                   t3.no,
+                   t3.name,
+                   t1.service,
+                   GROUP_CONCAT(t4.services) as services,
+                   GROUP_CONCAT(t4.color) as colors,
+                   t1.date
+                from
+                   hairdresser_booked_clients t1
+                inner join
+                   user_info t2 on t1.client_no = t2.no
+                inner join
+                   hairdresser_info t3 on t1.hairdresser_no = t3.no
+                inner join
+                   services t4 on find_in_set(t4.no, REPLACE(t1.service, ' ', '')) > 0
+                where
+                   t2.phone = #{userPhone}
+                group by
+                   t3.no, t3.name, t1.date
+        ]]>
+    </select>
+
+    <insert id="insertFavoriteHairdresser">
+        <![CDATA[
+            insert into favorite_hairdresser(client_no, hairdresser_no)
+            select t1.no as client_no, t2.no as hairdresser_no
+            from
+               user_info t1
+            inner join
+               hairdresser_info t2
+            where
+               t1.phone = #{userPhone}
+            and
+               t2.phone = #{hairdresserPhone}
+        ]]>
+    </insert>
+
+    <select id="selectFavoriteHardresser" resultType="camelMap">
+        <![CDATA[
+            select t2.name, t2.surname, t2.storeImage as image,t2.profession
+            from
+               favorite_hairdresser t1
+            inner join
+               hairdresser_info t2 on t1.hairdresser_no = t2.no
+            inner join
+               user_info t3 on t1.client_no = t3.no
+            where
+               t3.phone = #{userPhone}
+        ]]>
+    </select>
+
+    <update id = "updateUserInfo">
+        <![CDATA[
+			UPDATE user_info a
+			SET
+				a.phone = #{phone},
+				a.name = #{name},
+				a.surname = #{surname},
+				a.language = #{language},
+				a.notification = #{notification}
+			WHERE a.phone = #{phone}
+		]]>
+    </update>
 
 </mapper>

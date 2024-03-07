@@ -2,15 +2,18 @@ package com.barbie.haircut.api.hairdresser.service.impl;
 
 import com.barbie.haircut.api.CamelCaseMap;
 import com.barbie.haircut.api.convert.HairdresserDtoConverter;
-import com.barbie.haircut.api.dto.HairdresserDto;
-import com.barbie.haircut.api.dto.HairdresserInfoDto;
+import com.barbie.haircut.api.dto.*;
 import com.barbie.haircut.api.hairdresser.service.HairdresserMapper;
 import com.barbie.haircut.api.hairdresser.service.IServiceHairdresser;
 import com.barbie.haircut.api.hairdresser.service.IServiceImage;
 import com.barbie.haircut.api.hairdresser.service.UploadFile;
 import com.barbie.haircut.api.param.HairdresserParam;
 import com.barbie.haircut.api.param.HairdresserResponse;
+import com.barbie.haircut.api.param.UserBookedParam;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -28,77 +31,19 @@ public class ServiceHairdresser implements IServiceHairdresser {
 
     @Autowired
     private final HairdresserDtoConverter hairdresserDtoConverter;
-    @Override
-    public HairdresserResponse getHairdresserbyNo(int no) throws Exception {
-        CamelCaseMap map = hairdresserMapper.selectHairdresserbyNo(no);
-
-        if(map == null)
-            return  null;
-
-        HairdresserDto hairdresserDto =
-                hairdresserDtoConverter.convertCamelCaseMapToObject(map, HairdresserDto.class);
-
-        HairdresserResponse hairdresserResponse = new HairdresserResponse();
-
-        hairdresserResponse.setName(hairdresserDto.getName());
-        hairdresserResponse.setSurname( hairdresserDto.getSurname());
-        hairdresserResponse.setPhone(hairdresserDto.getPhone());
-        hairdresserResponse.setAddress( hairdresserDto.getAddress());
-        hairdresserResponse.setWorkingHour(hairdresserDto.getWorkingHour());
-
-        Resource resource =  iServiceImage.getFullPath(hairdresserDto.getStoreImage());
-        if(resource !=null)
-        {
-            hairdresserResponse.setImageUri(resource.getURL().toString());
-            hairdresserResponse.setImageName(hairdresserDto.getUploadImage());
-        }
-
-        hairdresserResponse.setDocument(hairdresserDto.getDocument());
-        hairdresserResponse.setAwards(hairdresserDto.getAwards());
-
-        return hairdresserResponse;
-    }
 
     @Override
-    public List<HairdresserResponse> getHairdresserAll() throws Exception {
-
-        List<CamelCaseMap> camelCaseMaps =  hairdresserMapper.selectHairdresserAll();
-
-        if(camelCaseMaps ==null) return null;
-
-        List<HairdresserDto> listDto = new ArrayList<>();
-        for(CamelCaseMap map: camelCaseMaps)
-        {
-            listDto.add(hairdresserDtoConverter.convertCamelCaseMapToObject(map, HairdresserDto.class));
-        }
-
-        List<HairdresserResponse> hairdresserResponsesList = new ArrayList<>();
-        for(HairdresserDto hairdresserDto : listDto)
-        {
-            HairdresserResponse hairdresserResponse = hairdresserDtoConverter.convertHairdresserDtoToResponse(hairdresserDto);
-
-            if(!hairdresserDto.getStoreImage().isEmpty()) {
-                Resource resource = iServiceImage.getFullPath(hairdresserDto.getStoreImage());
-
-                if(resource !=null)
-                {
-                    hairdresserResponse.setImageUri(resource.getURL().toString());
-                    hairdresserResponse.setImageName(hairdresserDto.getUploadImage());
-                }
-            }
-
-            hairdresserResponsesList.add(hairdresserResponse);
-        }
-
-        return  hairdresserResponsesList;
+    public CamelCaseMap getHairdresser(String hairdresserPhone) throws Exception {
+        return hairdresserMapper.selectHairdresser(hairdresserPhone);
     }
 
     @Override
     public List<HairdresserInfoDto> getAllHairdresserForUserMainPage() throws Exception {
 
-        List<CamelCaseMap> dataList = hairdresserMapper.selectAllHairdresserForUserMainPage();
+        List<CamelCaseMap> dataMap = hairdresserMapper.selectAllHairdresserForUserMainPage();
+
         List<HairdresserInfoDto> resultData = new ArrayList<>();
-        for(CamelCaseMap map: dataList)
+        for(CamelCaseMap map: dataMap)
         {
             HairdresserInfoDto newItem = new HairdresserInfoDto();
             newItem.setName(map.get("name").toString());
@@ -107,8 +52,8 @@ public class ServiceHairdresser implements IServiceHairdresser {
             newItem.setAddress(map.get("address").toString());
             newItem.setImageUri(map.get("storeimage").toString());
             newItem.setProfession(map.get("profession").toString());
-            newItem.setServices(map.get("services").toString());
-            newItem.setAverageScore(map.get("averageScore").toString());
+            //newItem.setServices(map.get("services").toString());
+            newItem.setAllScores(map.get("allScores").toString());
 
             resultData.add(newItem);
         }
@@ -117,81 +62,55 @@ public class ServiceHairdresser implements IServiceHairdresser {
     }
 
     @Override
-    public List<HairdresserInfoDto> getHairdresserDetailInfo(String phone) throws Exception {
+    public HairdresserInfoDto getHairdresserDetailInfo(String phone) throws Exception {
 
-        List<CamelCaseMap> dataList = hairdresserMapper.selectHairdresserDetailInfo(phone);
-        List<HairdresserInfoDto> resultData = new ArrayList<>();
-        for(CamelCaseMap map: dataList)
-        {
-            HairdresserInfoDto newItem = new HairdresserInfoDto();
-            newItem.setName(map.get("name").toString());
-            newItem.setSurname(map.get("surname").toString());
-            newItem.setPhone(map.get("phone").toString());
-            newItem.setWorkingHour(map.get("workinghour").toString());
-            newItem.setAddress(map.get("address").toString());
-            newItem.setImageUri(map.get("storeimage").toString());
-            newItem.setProfession(map.get("profession").toString());
-            newItem.setServices(map.get("services").toString());
-            newItem.setServiceColor(map.get("serviceColor").toString());
-            newItem.setScores(map.get("scores").toString());
-            newItem.setAverageScore(map.get("averageScore").toString());
+        CamelCaseMap dataMap = hairdresserMapper.selectHairdresserDetailInfo(phone);
 
-            resultData.add(newItem);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HairdresserInfoDto resultData = new HairdresserInfoDto();
+        resultData.setName(dataMap.get("name").toString());
+        resultData.setSurname(dataMap.get("surname").toString());
+        resultData.setPhone(dataMap.get("phone").toString());
+        resultData.setWorkingHour(dataMap.get("workinghour").toString());
+        resultData.setAddress(dataMap.get("address").toString());
+        resultData.setImageUri(dataMap.get("storeimage").toString());
+        resultData.setProfession(dataMap.get("profession").toString());
+        resultData.setServices(objectMapper.readValue(dataMap.get("services").toString(), new TypeReference<List<ServiceInfo>>() {}));
+        //resultData.setServices(dataMap.get("services").toString());
+        resultData.setScores(dataMap.get("scores").toString());
+        resultData.setAllScores(dataMap.get("allScores").toString());
+        resultData.setAverageScores(dataMap.get("averageScores").toString());
+
+        String[] scoreList = resultData.getScores().split(",");
+        if(scoreList.length == 5){
+            String strPercentage = "";
+            int allScore = Integer.parseInt(resultData.getAllScores());
+            int score1 = Integer.parseInt(scoreList[0]);
+            int score2 = Integer.parseInt(scoreList[1]);
+            int score3 = Integer.parseInt(scoreList[2]);
+            int score4 = Integer.parseInt(scoreList[3]);
+            int score5 = Integer.parseInt(scoreList[4]);
+            score1 = (score1 * 100) / allScore;
+            score2 = (score2 * 100) / allScore;
+            score3 = (score3 * 100) / allScore;
+            score4 = (score4 * 100) / allScore;
+            score5 = (score5 * 100) / allScore;
+
+            resultData.setPercentageScore(String.valueOf(score1) + "," +
+                                          String.valueOf(score2) + "," +
+                                          String.valueOf(score3) + "," +
+                                          String.valueOf(score4) + "," +
+                                          String.valueOf(score5));
         }
 
         return resultData;
     }
 
     @Override
-    public HairdresserParam createNewHairdresser(HairdresserParam hairdresserParam) throws Exception {
-
-        HairdresserDto hairdresserDto = hairdresserDtoConverter.convertHairdresserParamToDto(hairdresserParam);
-
-        UploadFile uploadFile = iServiceImage.storeFile(hairdresserParam.getImage());
-
-        hairdresserDto.setUploadImage(uploadFile.getUploadFilename());
-        hairdresserDto.setStoreImage(uploadFile.getStoreFilename());
-
-        if(hairdresserMapper.insertNewHairdresser(hairdresserDto) > 0)
-        {
-            hairdresserParam = hairdresserDtoConverter.convertHairdresserDtoParam(hairdresserDto);
-            return  hairdresserParam;
-        }
-        else return null;
-    }
-
-    @Override
-    public int deleteHairdresserbyNo(int no) throws Exception {
-
-        CamelCaseMap map = hairdresserMapper.selectHairdresserbyNo(no);
-
-        if(map == null) return 0;
-
-        HairdresserDto hairdresserDto = hairdresserDtoConverter.convertCamelCaseMapToObject(map, HairdresserDto.class);
-
-        int result =hairdresserMapper.deleteHairdresserbyNo(no);
-
-        if( result == 1)
-        {
-            iServiceImage.deletestoreFile(hairdresserDto.getStoreImage());
-        }
-
-        return result;
-    }
-
-    @Override
-    public HairdresserParam updateHairdresserbyNo(HairdresserParam hairdresserParam, int Id) throws Exception {
-
-        CamelCaseMap map = hairdresserMapper.selectHairdresserbyNo(Id);
-        if(map == null) return  null;
-
-        HairdresserDto convertedDto = hairdresserDtoConverter.convertHairdresserParamToDto(hairdresserParam);
-        convertedDto.setNo(Id);
-
-        if(hairdresserMapper.updateHairdresserbyNo(convertedDto) > 0)
-        {
-            hairdresserParam =  hairdresserDtoConverter.convertHairdresserDtoParam(convertedDto);
-            return hairdresserParam;
-        }else return  null;
+    public int insertBookedClient(UserBookedParam param) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        UserBookedDto dto = mapper.map(param, UserBookedDto.class);
+        return hairdresserMapper.insertBookedClient(dto);
     }
 }
