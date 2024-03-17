@@ -6,19 +6,17 @@ import com.barbie.haircut.api.dto.*;
 import com.barbie.haircut.api.hairdresser.service.HairdresserMapper;
 import com.barbie.haircut.api.hairdresser.service.IServiceHairdresser;
 import com.barbie.haircut.api.hairdresser.service.IServiceImage;
-import com.barbie.haircut.api.hairdresser.service.UploadFile;
-import com.barbie.haircut.api.param.HairdresserParam;
-import com.barbie.haircut.api.param.HairdresserResponse;
+import com.barbie.haircut.api.param.HairdresserBookedClientHimSelftDto;
+import com.barbie.haircut.api.param.HairdresserClientBookParam;
+import com.barbie.haircut.api.param.HairdresserRegParam;
 import com.barbie.haircut.api.param.UserBookedParam;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +56,26 @@ public class ServiceHairdresser implements IServiceHairdresser {
             resultData.add(newItem);
         }
 
+        return resultData;
+    }
+
+    @Override
+    public List<HairdresserServiceDto> getHairdresserServiceList(String phone) throws Exception {
+
+        List<CamelCaseMap> dataMap = hairdresserMapper.selectHairdresserService(phone);
+
+        List<HairdresserServiceDto> resultData = new ArrayList<>();
+        for(CamelCaseMap map: dataMap)
+        {
+            HairdresserServiceDto newItem = new HairdresserServiceDto();
+            newItem.setNo(map.get("no").toString());
+            newItem.setHairdresser_no(map.get("hairdresserNo").toString());
+            newItem.setService(map.get("services").toString());
+            newItem.setPrice(map.get("price").toString());
+            newItem.setColor(map.get("color").toString());
+
+            resultData.add(newItem);
+        }
         return resultData;
     }
 
@@ -112,5 +130,49 @@ public class ServiceHairdresser implements IServiceHairdresser {
         ModelMapper mapper = new ModelMapper();
         UserBookedDto dto = mapper.map(param, UserBookedDto.class);
         return hairdresserMapper.insertBookedClient(dto);
+    }
+
+    @Override
+    public int insertHairdresserBookedClient(HairdresserBookedClientHimSelftDto param) throws Exception {
+        return hairdresserMapper.insertHairdresserBookedClient(param);
+    }
+
+    @Override
+    public int register(HairdresserRegParam param) throws Exception {
+        return hairdresserMapper.insertHairdresser(param);
+    }
+
+    @Override
+    public List<HairdresserBookedClientDto> getBookedClients(HairdresserClientBookParam param) throws Exception {
+
+        List<CamelCaseMap> dataMap = hairdresserMapper.selectBookedClients(param);
+
+        List<HairdresserBookedClientDto> resultData = new ArrayList<>();
+        for(CamelCaseMap map: dataMap)
+        {
+            HairdresserBookedClientDto newItem = new HairdresserBookedClientDto();
+            newItem.setName(map.get("name").toString());
+            newItem.setSurname(map.get("surname").toString());
+            newItem.setPhone(map.get("phone").toString());
+            newItem.setServices(map.get("services").toString());
+            newItem.setColors(map.get("colors").toString());
+            String strDate = map.get("date").toString();
+
+            if(!strDate.isEmpty()){
+                List<String> dList = List.of(strDate.split("-"));
+                if(dList.size() == 2){
+                    List<String> tList1 = List.of(dList.get(0).split("/"));
+                    List<String> tList2 = List.of(dList.get(1).split("/"));
+                    if(tList1.size() == 2 && tList2.size() == 2){
+                        newItem.setDate(tList1.get(0));
+                        newItem.setStartTime(tList1.get(1));
+                        newItem.setEndTime(tList2.get(1));
+                    }
+                }
+            }
+            resultData.add(newItem);
+        }
+
+        return resultData;
     }
 }

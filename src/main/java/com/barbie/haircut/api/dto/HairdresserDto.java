@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class HairdresserDto {
-   private int    no;
+   private int no;
    private String name;
    private String surname;
    private String phone;

@@ -10,7 +10,7 @@ import com.barbie.haircut.api.dto.UserInfoDto;
 import com.barbie.haircut.api.param.FavoriteHairdresserParam;
 import com.barbie.haircut.api.param.UserInfoParam;
 import com.barbie.haircut.api.param.UserParam;
-import com.barbie.haircut.api.param.UserRegistrationParam;
+import com.barbie.haircut.api.param.UserRegParam;
 import com.barbie.haircut.api.user.service.IUserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -71,7 +71,7 @@ public class UserCommonController extends BaseController {
             @ApiResponse(responseCode = "200", description = "success")
     })
     @PostMapping(value= "/register", headers = { "Content-type=application/json" })
-    public ResponseEntity<Object> register(@RequestBody UserRegistrationParam param){
+    public ResponseEntity<Object> register(@RequestBody UserRegParam param){
         VersionResponseResult result = null;
 
         try {

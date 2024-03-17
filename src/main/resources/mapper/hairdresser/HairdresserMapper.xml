@@ -9,6 +9,16 @@
         ]]>
     </select>
 
+    <select id="selectHairdresserService" resultType="camelMap">
+        <![CDATA[
+            SELECT * FROM services
+               WHERE hairdresser_no = (
+                SELECT no FROM hairdresser_info
+                 WHERE phone = #{phone}
+                )
+        ]]>
+    </select>
+
     <select id="selectAllHairdresserForUserMainPage" resultType="camelMap">
     <![CDATA[
             select
@@ -66,5 +76,66 @@
                t2.phone = #{hairdresserPhone}
         ]]>
     </insert>
+
+    <insert id="insertHairdresserBookedClient">
+        <![CDATA[
+            INSERT INTO hairdresser_booked_client_himself (hairdresser_no, client_phone, client_name, service, date, note)
+            SELECT
+              t1.no,
+              #{client_phone},
+              #{client_name},
+              #{service},
+              #{date},
+              #{note}
+            FROM
+              hairdresser_info t1
+            WHERE
+              t1.phone = #{hairdresser_phone}
+        ]]>
+    </insert>
+
+    <insert id="insertHairdresser">
+        <![CDATA[
+           INSERT INTO hairdresser_info
+            (
+                 name
+                ,surname
+                ,phone
+                ,location
+            )
+            VALUES
+            (
+                #{name}
+                ,#{surName}
+                ,#{phone}
+                ,#{location}
+            )
+        ]]>
+    </insert>
+
+    <select id="selectBookedClients" resultType="camelMap">
+        <![CDATA[
+            SELECT
+                t3.name,
+                t3.surname,
+                t3.phone,
+                GROUP_CONCAT(t4.services SEPARATOR ',') AS services,
+                GROUP_CONCAT(t4.color SEPARATOR ',') AS colors,
+                t2.date
+            FROM
+                hairdresser_info t1
+            INNER JOIN
+                hairdresser_booked_clients t2 ON t1.no = t2.hairdresser_no
+            INNER JOIN
+                user_info t3 ON t2.client_no = t3.no
+            INNER JOIN
+                services t4 ON FIND_IN_SET(t4.no, t2.service)
+            WHERE
+                t1.phone = #{phone}
+            AND SUBSTRING_INDEX(SUBSTRING_INDEX(t2.date, '/', 1), ' ', -1) = #{date}
+            GROUP BY
+                t1.no, t1.name, t1.surname, t3.phone, t2.date;
+        ]]>
+    </select>
 
 </mapper>

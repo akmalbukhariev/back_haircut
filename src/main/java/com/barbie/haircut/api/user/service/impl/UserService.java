@@ -9,7 +9,7 @@ import com.barbie.haircut.api.dto.UserInfoDto;
 import com.barbie.haircut.api.param.FavoriteHairdresserParam;
 import com.barbie.haircut.api.param.UserInfoParam;
 import com.barbie.haircut.api.param.UserParam;
-import com.barbie.haircut.api.param.UserRegistrationParam;
+import com.barbie.haircut.api.param.UserRegParam;
 import com.barbie.haircut.api.user.service.IUserService;
 import com.barbie.haircut.api.user.service.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public int register(UserRegistrationParam param) throws Exception {
+    public int register(UserRegParam param) throws Exception {
 
         CamelCaseMap map = userMapper.selectUser(param.phone);
         if(map != null && !map.isEmpty()){

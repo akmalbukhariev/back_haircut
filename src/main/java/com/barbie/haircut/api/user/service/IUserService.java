@@ -7,7 +7,7 @@ import com.barbie.haircut.api.dto.UserInfoDto;
 import com.barbie.haircut.api.param.FavoriteHairdresserParam;
 import com.barbie.haircut.api.param.UserInfoParam;
 import com.barbie.haircut.api.param.UserParam;
-import com.barbie.haircut.api.param.UserRegistrationParam;
+import com.barbie.haircut.api.param.UserRegParam;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface IUserService {
 
     public CamelCaseMap getUser(String phone) throws Exception;
 
-    public int register(UserRegistrationParam param) throws Exception;
+    public int register(UserRegParam param) throws Exception;
 
     public int updateUserCustomer(UserInfoParam param) throws Exception;
 

@@ -10,6 +10,9 @@ public class HairdresserInfoDto {
     private String surname;
     private String phone;
     private String address;
+    private String location;
+    private String language;
+    private String notification;
     private String workingHour;
     private String scores;
     private List<ServiceInfo> services;

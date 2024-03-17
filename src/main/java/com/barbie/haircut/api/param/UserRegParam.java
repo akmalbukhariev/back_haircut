@@ -3,7 +3,7 @@ package com.barbie.haircut.api.param;
 import lombok.Data;
 
 @Data
-public class UserRegistrationParam {
+public class UserRegParam {
     public String phone;
     public String name;
     public String surName;

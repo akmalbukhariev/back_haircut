@@ -5,29 +5,20 @@ import com.barbie.haircut.api.CamelCaseMap;
 import com.barbie.haircut.api.VersionResponseResult;
 import com.barbie.haircut.api.constant.Result;
 import com.barbie.haircut.api.convert.HairdresserDtoConverter;
-import com.barbie.haircut.api.dto.HairdresserDto;
-import com.barbie.haircut.api.dto.HairdresserInfoDto;
-import com.barbie.haircut.api.dto.UserBookedInfoDto;
-import com.barbie.haircut.api.dto.UserInfoDto;
+import com.barbie.haircut.api.dto.*;
 import com.barbie.haircut.api.hairdresser.service.IServiceHairdresser;
-import com.barbie.haircut.api.hairdresser.service.IServiceImage;
-import com.barbie.haircut.api.param.HairdresserParam;
-import com.barbie.haircut.api.param.HairdresserResponse;
+import com.barbie.haircut.api.param.HairdresserBookedClientHimSelftDto;
+import com.barbie.haircut.api.param.HairdresserClientBookParam;
+import com.barbie.haircut.api.param.HairdresserRegParam;
 import com.barbie.haircut.api.param.UserBookedParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.extension.ExtensionConfigurationException;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -107,7 +98,7 @@ public class HairdresserController extends BaseController {
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 
-    @Operation(tags = {"User"}, summary = "4. get hairdresser info", description = "get hairdresser info", hidden = false,
+    @Operation(tags = {"Hairdresser"}, summary = "4. get hairdresser info", description = "get hairdresser info", hidden = false,
             responses = {@ApiResponse(responseCode = "200", description = "success")
             })
     @GetMapping(value= "/getHairdresser/{phone}", headers = { "Content-type=application/json" })
@@ -124,8 +115,8 @@ public class HairdresserController extends BaseController {
                 info.setPhone(map.get("phone").toString());
                 info.setName(map.get("name").toString());
                 info.setSurname(map.get("surname").toString());
-                //info.setIs_customer(map.get("isCustomer").toString());
-                //info.setIs_hairdresser(map.get("isHairdresser").toString());
+                info.setLanguage(map.get("language").toString());
+                info.setNotification(map.get("notification").toString());
 
                 result = setResult(Result.USER_EXIST, info);
             }
@@ -134,6 +125,96 @@ public class HairdresserController extends BaseController {
             result = setResult(Result.SERVER_ERROR);
         }
 
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"Hairdresser"}, summary = "5. insert hairdresser", description = "insert hairdresser", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @PostMapping(value= "/register", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> register(@RequestBody HairdresserRegParam param) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            int resultData = serviceHairdresser.register(param);
+
+            if(resultData > 0) {
+                result = setResult(Result.SUCCESS, resultData);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"Hairdresser"}, summary = "6. get the all booked clients for hairdresser", description = "get all hairdresser info", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @PostMapping(value= "/getBookedClients", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> getBookedClients(@RequestBody HairdresserClientBookParam param) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            List<HairdresserBookedClientDto> resultData = serviceHairdresser.getBookedClients(param);
+
+            if(resultData.size() != 0 && !resultData.isEmpty()) {
+                result = setResult(Result.SUCCESS , resultData );
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+
+        } catch(Exception e){
+
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"Hairdresser"}, summary = "7. insert hairdresser booked client", description = "insert hairdresser booked client", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @PostMapping(value= "/addHairdresserBookedClient", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> addHairdresserBookedClient(@RequestBody HairdresserBookedClientHimSelftDto param) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            int resultData = serviceHairdresser.insertHairdresserBookedClient(param);
+
+            if(resultData > 0) {
+                result = setResult(Result.SUCCESS, resultData);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @Operation(tags = {"Hairdresser"}, summary = "8. get hairdresser services", description = "get hairdresser services", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @GetMapping(value= "/getHairdresserServices/{phone}", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> getHairdresserServices(@PathVariable String phone) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            List<HairdresserServiceDto> resultData = serviceHairdresser.getHairdresserServiceList(phone);
+
+            if(resultData.size() != 0 && !resultData.isEmpty()) {
+                result = setResult(Result.SUCCESS , resultData );
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+
+        } catch(Exception e){
+            result = setResult(Result.SERVER_ERROR);
+        }
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 }

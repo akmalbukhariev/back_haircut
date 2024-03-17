@@ -5,7 +5,7 @@ import com.barbie.haircut.api.dto.UserDto;
 import com.barbie.haircut.api.dto.UserInfoDto;
 import com.barbie.haircut.api.param.FavoriteHairdresserParam;
 import com.barbie.haircut.api.param.UserInfoParam;
-import com.barbie.haircut.api.param.UserRegistrationParam;
+import com.barbie.haircut.api.param.UserRegParam;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 public interface UserMapper {
     public CamelCaseMap selectUser(String phone) throws Exception;
 
-    public int insertUser(UserRegistrationParam param) throws Exception;
+    public int insertUser(UserRegParam param) throws Exception;
 
     public int updateUserCustomer(UserInfoDto dto) throws Exception;
 
