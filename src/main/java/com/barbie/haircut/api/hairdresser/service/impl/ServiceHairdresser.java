@@ -150,29 +150,42 @@ public class ServiceHairdresser implements IServiceHairdresser {
         List<HairdresserBookedClientDto> resultData = new ArrayList<>();
         for(CamelCaseMap map: dataMap)
         {
-            HairdresserBookedClientDto newItem = new HairdresserBookedClientDto();
-            newItem.setName(map.get("name").toString());
-            newItem.setSurname(map.get("surname").toString());
-            newItem.setPhone(map.get("phone").toString());
-            newItem.setServices(map.get("services").toString());
-            newItem.setColors(map.get("colors").toString());
-            String strDate = map.get("date").toString();
+            HairdresserBookedClientDto newItem = mapToHairdresserBookedClientDto(map);
+            resultData.add(newItem);
+        }
 
-            if(!strDate.isEmpty()){
-                List<String> dList = List.of(strDate.split("-"));
-                if(dList.size() == 2){
-                    List<String> tList1 = List.of(dList.get(0).split("/"));
-                    List<String> tList2 = List.of(dList.get(1).split("/"));
-                    if(tList1.size() == 2 && tList2.size() == 2){
-                        newItem.setDate(tList1.get(0));
-                        newItem.setStartTime(tList1.get(1));
-                        newItem.setEndTime(tList2.get(1));
-                    }
-                }
-            }
+        dataMap = hairdresserMapper.selectBookedClientsHimself(param);
+        for(CamelCaseMap map: dataMap)
+        {
+            HairdresserBookedClientDto newItem = mapToHairdresserBookedClientDto(map);
             resultData.add(newItem);
         }
 
         return resultData;
+    }
+
+    private HairdresserBookedClientDto mapToHairdresserBookedClientDto(CamelCaseMap map){
+        HairdresserBookedClientDto newItem = new HairdresserBookedClientDto();
+        newItem.setName(map.get("name").toString());
+        newItem.setSurname(map.get("surname").toString());
+        newItem.setPhone(map.get("phone").toString());
+        newItem.setServices(map.get("services").toString());
+        newItem.setColors(map.get("colors").toString());
+        String strDate = map.get("date").toString();
+
+        if(!strDate.isEmpty()){
+            List<String> dList = List.of(strDate.split("-"));
+            if(dList.size() == 2){
+                List<String> tList1 = List.of(dList.get(0).split("/"));
+                List<String> tList2 = List.of(dList.get(1).split("/"));
+                if(tList1.size() == 2 && tList2.size() == 2){
+                    newItem.setDate(tList1.get(0));
+                    newItem.setStartTime(tList1.get(1));
+                    newItem.setEndTime(tList2.get(1));
+                }
+            }
+        }
+
+        return newItem;
     }
 }

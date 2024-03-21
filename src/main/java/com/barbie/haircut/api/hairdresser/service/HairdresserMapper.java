@@ -19,4 +19,5 @@ public interface HairdresserMapper {
     int insertHairdresserBookedClient(HairdresserBookedClientHimSelftDto dto) throws  Exception;
     int insertHairdresser(HairdresserRegParam param) throws  Exception;
     List<CamelCaseMap> selectBookedClients(HairdresserClientBookParam param) throws  Exception;
+    List<CamelCaseMap> selectBookedClientsHimself(HairdresserClientBookParam param) throws  Exception;
 }

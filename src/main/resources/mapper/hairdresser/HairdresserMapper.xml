@@ -138,4 +138,23 @@
         ]]>
     </select>
 
+    <select id="selectBookedClientsHimself" resultType="camelMap">
+        <![CDATA[
+            SELECT t1.client_name as name,
+                   '' as surname,
+                   t1.client_phone as phone,
+                   GROUP_CONCAT(t2.services SEPARATOR ',') AS services,
+                   GROUP_CONCAT(t2.color SEPARATOR ',') AS colors,
+                   t1.date
+             FROM
+                hairdresser_booked_client_himself t1
+             INNER JOIN
+                services t2 ON FIND_IN_SET(t2.no, t1.service)
+             WHERE t1.hairdresser_no = (select no from hairdresser_info where phone = #{phone})
+             AND SUBSTRING_INDEX(SUBSTRING_INDEX(t1.date, '/', 1), ' ', -1) = #{date}
+             GROUP BY
+                t1.no, t1.client_name, t1.client_phone, t1.date
+        ]]>
+    </select>
+
 </mapper>
