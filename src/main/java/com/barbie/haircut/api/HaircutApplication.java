@@ -28,3 +28,5 @@ public class HaircutApplication extends SpringBootServletInitializer {
 	}
 
 }
+
+//http://localhost:8080/swagger-ui/#/Hairdresser/updateHairdresserDetailInfoUsingPOST
