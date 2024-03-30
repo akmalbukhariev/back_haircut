@@ -164,6 +164,11 @@ public class ServiceHairdresser implements IServiceHairdresser {
         return resultData;
     }
 
+    @Override
+    public int updateHairdresserInfo(HairdresserInfoDto dto) throws Exception {
+        return hairdresserMapper.updateHairdresserInfo(dto);
+    }
+
     private HairdresserBookedClientDto mapToHairdresserBookedClientDto(CamelCaseMap map){
         HairdresserBookedClientDto newItem = new HairdresserBookedClientDto();
         newItem.setName(map.get("name").toString());

@@ -19,4 +19,5 @@ public interface IServiceHairdresser {
     int insertHairdresserBookedClient(HairdresserBookedClientHimSelftDto param) throws  Exception;
     int register(HairdresserRegParam param) throws  Exception;
     List<HairdresserBookedClientDto> getBookedClients(HairdresserClientBookParam param) throws Exception;
+    int updateHairdresserInfo(HairdresserInfoDto dto) throws  Exception;
 }

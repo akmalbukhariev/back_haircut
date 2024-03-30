@@ -1,6 +1,7 @@
 package com.barbie.haircut.api.hairdresser.service;
 
 import com.barbie.haircut.api.CamelCaseMap;
+import com.barbie.haircut.api.dto.HairdresserInfoDto;
 import com.barbie.haircut.api.param.HairdresserBookedClientHimSelftDto;
 import com.barbie.haircut.api.dto.UserBookedDto;
 import com.barbie.haircut.api.param.HairdresserClientBookParam;
@@ -20,4 +21,5 @@ public interface HairdresserMapper {
     int insertHairdresser(HairdresserRegParam param) throws  Exception;
     List<CamelCaseMap> selectBookedClients(HairdresserClientBookParam param) throws  Exception;
     List<CamelCaseMap> selectBookedClientsHimself(HairdresserClientBookParam param) throws  Exception;
+    int updateHairdresserInfo(HairdresserInfoDto dto) throws  Exception;
 }

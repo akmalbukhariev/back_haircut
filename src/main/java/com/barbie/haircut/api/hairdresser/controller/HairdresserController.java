@@ -217,4 +217,27 @@ public class HairdresserController extends BaseController {
         }
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
+
+    @Operation(tags = {"Hairdresser"}, summary = "9. update detail hairdresser info", description = "update hairdresser info", hidden = false, responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    @PostMapping(value= "/updateHairdresserDetailInfo", headers = { "Content-type=application/json" })
+    public ResponseEntity<Object> updateHairdresserDetailInfo(@RequestBody HairdresserInfoDto dto) throws Exception
+    {
+        VersionResponseResult result = null;
+        try {
+            int resultData = serviceHairdresser.updateHairdresserInfo(dto);
+
+            if(resultData > 0) {
+                result = setResult(Result.SUCCESS, resultData);
+            }else {
+                result = setResult(Result.SERVER_ERROR);
+            }
+        } catch (Exception e) {
+
+            //log.error(ExceptionUtils.getStackTrace(e));
+            result = setResult(Result.SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
 }

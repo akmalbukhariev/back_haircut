@@ -157,4 +157,38 @@
         ]]>
     </select>
 
+    <update id="updateHairdresserInfo">
+        UPDATE hairdresser_info
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="name != null and name != ''">
+                    name=#{name},
+                </if>
+                <if test="surname != null and surname != ''">
+                    surname = #{surname},
+                </if>
+                <if test="profession != null and profession != ''">
+                    profession = #{profession},
+                </if>
+                <if test="phone != null and phone != ''">
+                    phone = #{phone},
+                </if>
+                <if test="address != null and address != ''">
+                    address = #{address},
+                </if>
+                <if test="location != null and location != ''">
+                    location = #{location},
+                </if>
+                <if test="workingHour != null and workingHour != ''">
+                    workingHour = #{workingHour},
+                </if>
+                <if test="language != null and language != ''">
+                    language = #{language},
+                </if>
+                <if test="notification != null and notification != ''">
+                    notification = #{notification}
+                </if>
+            </trim>
+        WHERE phone = #{phone}
+    </update>
+
 </mapper>
